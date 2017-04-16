@@ -140,6 +140,10 @@ void ASCIIText::printText(ASCIIText* text) {
     }
 }
 
+void ASCIIText::printTextToBMPFile(ASCIIText *text, const char *filename) {
+
+}
+
 //Definition of class CombinationSymbol_________________________________________________________________________________
 //______________________________________________________________________________________________________________________
 

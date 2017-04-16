@@ -36,6 +36,7 @@ public:
     void putPrintable(Printable* p);
     int getLength();
     static void printText(ASCIIText* text);
+    static void printTextToBMPFile(ASCIIText* text, const char* filename);
 private:
     int nesting;
     int length;
