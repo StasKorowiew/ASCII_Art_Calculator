@@ -49,7 +49,7 @@ void Printer::calculateAndPrint() {
     putInt(result);
 
     ASCIIText* toPrint = createText(text.begin(), text.end());
-    ASCIIText::printText(toPrint);
+    ASCIIText::printTextToBMPFile(toPrint, "result.bmp");
     clear();
     delete toPrint;
 }
