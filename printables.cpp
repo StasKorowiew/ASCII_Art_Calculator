@@ -8,8 +8,6 @@
 
 #include "printables.h"
 
-using namespace printables;
-
 //Some constants for printing___________________________________________________________________________________________
 //______________________________________________________________________________________________________________________
 char SYMBOLS[9][19][7] {{{"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"      "}, {"     "}, {"      "}, {"      "}, {"      "}},
@@ -97,7 +95,7 @@ int UsualSymbol::printLine(int line, PrintMode mode) {
                 case CONSOLE:
                     putToConsole(ch);
                     break;
-                case FILE:
+                case BMP:
                     if (ch == '*')
                         ch = (char) 255;
                     else
@@ -162,7 +160,7 @@ void ASCIIText::printText(ASCIIText *text, PrintMode mode) {
                 std::cout << std::endl;
             };
             break;
-        case FILE:
+        case BMP:
             out.open("result.bmp", std::ios::out | std::ios::binary);
 
             BITMAPFILEHEADER bmfh;
@@ -220,7 +218,7 @@ int CombinationSymbol::printLine(int line, PrintMode mode) {
                 case CONSOLE:
                     putToConsole(ch);
                     break;
-                case FILE:
+                case BMP:
                     if (ch == '*')
                         ch = (char) 255;
                     else
@@ -240,7 +238,7 @@ int CombinationSymbol::printLine(int line, PrintMode mode) {
             case CONSOLE:
                 std::cout << ' ';
                 break;
-            case FILE:
+            case BMP:
                 putToFile('\0');
                 break;
         }
@@ -255,56 +253,56 @@ int CombinationSymbol::calculateLength() {
     return length;
 }
 
-UsualSymbol* printables::makeUsualSymbol(int n) {
+UsualSymbol* makeUsualSymbol(int n) {
     return new UsualSymbol(*(cur++), n);
 }
 
-CombinationSymbol* printables::makeCombinationSymbol(int n) {
+CombinationSymbol* makeCombinationSymbol(int n) {
     ++cur;
-    ASCIIText* upper = printables::makeASCIIText(n+1);
-    ASCIIText* lower = printables::makeASCIIText(n+1);
+    ASCIIText* upper = makeASCIIText(n+1);
+    ASCIIText* lower = makeASCIIText(n+1);
     return new CombinationSymbol(n, upper, lower);
 }
 
-ASCIIText* printables::makeASCIIText(int n) {
+ASCIIText* makeASCIIText(int n) {
     MAX_NESTING = std::max(MAX_NESTING, n);
     ASCIIText* text = new ASCIIText(n);
     Printable* p;
     int balance = -1;
     while(cur < end) {
         if(check('c') || check('C')) {
-            p = printables::makeCombinationSymbol(n);
+            p = makeCombinationSymbol(n);
         } else if (check(',')) {
             break;
         } else if(*cur == '(') {
             --balance;
-            p = printables::makeUsualSymbol(n);
+            p = makeUsualSymbol(n);
         } else if (*cur == ')') {
             ++balance;
             if(balance == 0){
                 ++cur;
                 return text;
             }
-            p = printables::makeUsualSymbol(n);
+            p = makeUsualSymbol(n);
         } else {
-            p = printables::makeUsualSymbol(n);
+            p = makeUsualSymbol(n);
         }
         text->putPrintable(p);
     }
     return text;
 }
 
-ASCIIText* printables::createText(std::string::iterator b, std::string::iterator e) {
+ASCIIText* createText(std::string::iterator b, std::string::iterator e) {
     MAX_NESTING = 0;
     cur = b, end = e;
-    return printables::makeASCIIText(1);
+    return makeASCIIText(1);
 }
 
-void printables::putToConsole(char c) {
+void putToConsole(char c) {
     std::cout << c;
 }
 
-void printables::putToFile(char c) {
+void putToFile(char c) {
     for(int k = 0; k < SCALE; ++k) {
         out.put(c);
         out.put(c);
