@@ -7,86 +7,84 @@
 #ifndef HW4_1_PRINTABLES_H
 #define HW4_1_PRINTABLES_H
 
-namespace printables {
+enum PrintMode {
+    CONSOLE, BMP
+};
 
-    enum PrintMode {
-        CONSOLE, FILE
-    };
+class Printable {
+public:
+    virtual int printLine(int line, PrintMode mode);
 
-    class Printable {
-    public:
-        virtual int printLine(int line, PrintMode mode);
+    virtual int calculateLength();
 
-        virtual int calculateLength();
+    int getLength();
 
-        int getLength();
+protected:
+    int nesting;
+    int length;
 
-    protected:
-        int nesting;
-        int length;
+    static int getNumOfChar(char c);
+};
 
-        static int getNumOfChar(char c);
-    };
+class UsualSymbol : public Printable {
+public:
+    UsualSymbol(char c, int n);
 
-    class UsualSymbol : public Printable {
-    public:
-        UsualSymbol(char c, int n);
+    int printLine(int line, PrintMode mode);
 
-        int printLine(int line, PrintMode mode);
+    int calculateLength();
 
-        int calculateLength();
+private:
+    char symbol;
+};
 
-    private:
-        char symbol;
-    };
+class ASCIIText {
+public:
+    ASCIIText(int n);
 
-    class ASCIIText {
-    public:
-        ASCIIText(int n);
+    ~ASCIIText();
 
-        ~ASCIIText();
+    int printLine(int line, PrintMode mode);
 
-        int printLine(int line, PrintMode mode);
+    int calculateLength();
 
-        int calculateLength();
+    void putPrintable(Printable *p);
 
-        void putPrintable(Printable *p);
+    int getLength();
 
-        int getLength();
+    static void printText(ASCIIText *text, PrintMode mode);
 
-        static void printText(ASCIIText *text, PrintMode mode);
-
-    private:
-        int nesting;
-        int length;
-        std::vector<Printable *> content;
-    };
+private:
+    int nesting;
+    int length;
+    std::vector<Printable *> content;
+};
 
 
-    class CombinationSymbol : public Printable {
-    public:
-        CombinationSymbol(int n, ASCIIText *a, ASCIIText *b);
+class CombinationSymbol : public Printable {
+public:
+    CombinationSymbol(int n, ASCIIText *a, ASCIIText *b);
 
-        ~CombinationSymbol();
+    ~CombinationSymbol();
 
-        int printLine(int line, PrintMode mode);
+    int printLine(int line, PrintMode mode);
 
-        int calculateLength();
+    int calculateLength();
 
-    private:
-        ASCIIText *upper, *lower;
-    };
+private:
+    ASCIIText *upper, *lower;
+};
 
-    UsualSymbol* makeUsualSymbol(int n);
+UsualSymbol* makeUsualSymbol(int n);
 
-    CombinationSymbol* makeCombinationSymbol(int nesting);
+CombinationSymbol* makeCombinationSymbol(int nesting);
 
-    ASCIIText* makeASCIIText(int nesting);
+ASCIIText* makeASCIIText(int nesting);
 
-    ASCIIText* createText(std::string::iterator cur, std::string::iterator end);
+ASCIIText* createText(std::string::iterator cur, std::string::iterator end);
 
-    void putToConsole(char c);
+void putToConsole(char c);
 
-    void putToFile(char c);
-}
+void putToFile(char c);
+
 #endif //HW4_1_PRINTABLES_H
