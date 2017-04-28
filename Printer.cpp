@@ -48,8 +48,9 @@ void Printer::calculateAndPrint() {
     putChar('=');
     putInt(result);
 
-    ASCIIText* toPrint = createText(text.begin(), text.end());
-    ASCIIText::printTextToBMPFile(toPrint, "result.bmp");
+    printables::ASCIIText* toPrint = printables::createText(text.begin(), text.end());
+    printables::ASCIIText::printText(toPrint, printables::CONSOLE);
+    printables::ASCIIText::printText(toPrint, printables::FILE);
     clear();
     delete toPrint;
 }
